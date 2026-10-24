@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fb">
+  <title>Careerify | Job Search</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/" aria-label="Careerify home"><span class="brand-mark">C</span> careerify</a><span class="local-badge"><i></i> Local workspace</span></header>
+  <main class="layout">
+    <section class="intro"><div class="eyebrow">REVERSE RECRUITING WORKSPACE</div><h1>Find the right next role.</h1><p>Build a client profile, search current job listings, and review each result before sharing it.</p></section>
+    <section class="panel profile-panel" aria-labelledby="profile-heading">
+      <div class="section-heading"><div><div class="step">01 — CLIENT PROFILE</div><h2 id="profile-heading">Candidate details</h2></div><span id="savedStatus" class="saved-status">Saved on this device</span></div>
+      <div class="form-grid">
+        <label>Client name<input data-field="clientName" autocomplete="off" placeholder="Client name"></label>
+        <label>Email <span class="private-tag">private</span><input data-field="email" type="email" autocomplete="off" placeholder="Email address"></label>
+        <label>Phone <span class="private-tag">private</span><input data-field="phone" autocomplete="off" placeholder="Phone number"></label>
+        <label>Location<input data-field="location" autocomplete="off" placeholder="City, state, country"></label>
+        <label>Country code<input data-field="countryCode" maxlength="2" placeholder="US"></label>
+        <label>Work arrangement<select data-field="arrangement"><option>Remote or Hybrid</option><option>Remote</option><option>Hybrid</option><option>On-site</option><option>Any</option></select></label>
+        <label>Expected salary minimum<input data-field="salaryMin" inputmode="numeric" placeholder="e.g. 80000"></label>
+        <label>Expected salary maximum<input data-field="salaryMax" inputmode="numeric" placeholder="e.g. 110000"></label>
+        <label class="wide">Target job titles <span class="hint">One title per line</span><textarea data-field="targetRoles" rows="5" placeholder="Technical Support Engineer&#10;Systems Administrator"></textarea></label>
+        <label>Excluded employers <span class="hint">One per line</span><textarea data-field="excludedEmployers" rows="3" placeholder="Employer names to exclude"></textarea></label>
+        <label>Preferred industries <span class="hint">One per line</span><textarea data-field="industries" rows="3" placeholder="Software&#10;Healthcare"></textarea></label>
+        <label class="wide">Experience / verified CV notes <span class="hint">Do not include sensitive personal data</span><textarea data-field="experience" rows="4" placeholder="Relevant experience, skills, and qualifications"></textarea></label>
+      </div>
+      <div class="custom-head"><div><h3>Additional client fields</h3><p>Add fields such as notice period, work authorization, or commute preferences.</p></div><button id="addField" class="button secondary" type="button">＋ Add field</button></div>
+      <div id="customFields" class="custom-fields"></div>
+    </section>
+    <section class="search-row panel">
+      <div><div class="step">02 — LIVE SEARCH</div><h2>Choose how many jobs to fetch</h2><p>Google Jobs results need employer-page verification before you share them.</p></div>
+      <div class="search-controls"><label for="jobCount">Maximum jobs <strong id="countLabel">10</strong></label><input id="jobCount" type="range" min="1" max="50" value="10"><button id="searchButton" class="button primary" type="button">Find jobs <span aria-hidden="true">→</span></button></div>
+      <div id="searchStatus" class="status" role="status" aria-live="polite"></div>
+    </section>
+    <section id="resultsSection" class="results-section" hidden><div class="section-heading"><div><div class="step">03 — SEARCH RESULTS</div><h2>Jobs to review</h2></div><span id="resultCount" class="count-pill"></span></div><div id="resultWarnings" class="warning-box"></div><div id="jobResults" class="job-list"></div></section>
+    <footer>Client profile is saved in this browser on this device. Personal profile fields are not sent to SerpApi; search terms and location are.</footer>
+  </main>
+  <template id="customFieldTemplate"><div class="custom-field-row"><input class="custom-name" placeholder="Field name" aria-label="Custom field name"><input class="custom-value" placeholder="Value" aria-label="Custom field value"><button class="remove-field" type="button" aria-label="Remove field">×</button></div></template>
+</body>
+</html>
