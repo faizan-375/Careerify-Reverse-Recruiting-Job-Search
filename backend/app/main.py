@@ -80,14 +80,34 @@ async def search_jobs(request: JobSearchRequest) -> JobSearchResponse:
                 response.raise_for_status()
                 payload = response.json()
             except (httpx.HTTPError, ValueError) as exc:
-                # Do not return exception details: provider URLs may contain the API key.
+                provider_error = None
+                if isinstance(exc, httpx.HTTPStatusError):
+                    try:
+                        error_payload = exc.response.json()
+                    except ValueError:
+                        error_payload = None
+                    if isinstance(error_payload, dict):
+                        message = error_payload.get("error")
+                        if isinstance(message, str) and message:
+                            provider_error = message.replace(api_key, "[redacted]")
+                # Provider error bodies are useful diagnostics, but must not expose the key.
                 raise HTTPException(
                     status_code=502,
-                    detail="SerpApi search failed. Check the backend key, account quota, and provider status.",
+                    detail=(
+                        f"SerpApi rejected the search: {provider_error}"
+                        if provider_error
+                        else "SerpApi search failed. Check the backend key, account quota, and provider status."
+                    ),
                 ) from exc
 
             if payload.get("error"):
-                raise HTTPException(status_code=502, detail="SerpApi returned a search error.")
+                message = payload["error"]
+                detail = (
+                    f"SerpApi returned a search error: {message.replace(api_key, '[redacted]')}"
+                    if isinstance(message, str) and message
+                    else "SerpApi returned a search error."
+                )
+                raise HTTPException(status_code=502, detail=detail)
 
             for raw_job in payload.get("jobs_results", []):
                 job = normalize_job(raw_job)

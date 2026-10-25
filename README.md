@@ -20,25 +20,65 @@ careerify-job-search-webapp/
     └── .gitignore
 ```
 
-## Run on Windows in VS Code
+## Setup and run
 
-Open the integrated terminal in VS Code and change to the `backend` folder. Set up the Python environment and install packages (if not already done):
+### Requirements
+
+- Python 3.10 or newer.
+- A SerpApi account and API key to search for jobs. The website can load without a key, but job searches require one.
+- The project files on your computer (download or clone this repository).
+
+Open a terminal in the project folder, then change to the backend directory:
+
+```text
+cd backend
+```
+
+### Windows (PowerShell)
+
+Run these commands from the `backend` directory. Create a virtual environment and install the required packages:
 
 ```powershell
 py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-Copy-Item .env.example .env
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+notepad .env
 ```
 
-Open `backend/.env` and set `SERPAPI_API_KEY` to a newly generated key. Do not paste the key into the website files or share it in screenshots. Then start the local website:
+In the `.env` file, set `SERPAPI_API_KEY` to your SerpApi API key, then save and close the file. Keep the key in this backend file; do not put it in frontend files or share it publicly.
+
+Start the website from the same `backend` directory:
 
 ```powershell
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Keep the terminal open and visit <http://127.0.0.1:8000>. The health endpoint is <http://127.0.0.1:8000/health>.
+### macOS or Linux
 
-If PowerShell blocks virtual-environment activation, no activation command is needed; invoke Python from `.venv\Scripts\python.exe` as above.
+Run these commands from the `backend` directory:
+
+```bash
+python3 -m venv .venv
+./.venv/bin/python -m pip install --upgrade pip
+./.venv/bin/python -m pip install -r requirements.txt
+if [ ! -f .env ]; then cp .env.example .env; fi
+nano .env
+```
+
+Set `SERPAPI_API_KEY` in `.env` to your SerpApi API key and save the file. Then start the website:
+
+```bash
+./.venv/bin/python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+### Open the website
+
+Keep the terminal open while using the website and visit <http://127.0.0.1:8000>. The health check is at <http://127.0.0.1:8000/health>. To stop the server, press **Ctrl+C** in the terminal.
+
+For later runs, open a terminal in the project folder, run `cd backend`, and repeat only the Uvicorn command for your operating system. The virtual environment and dependencies do not need to be recreated.
+
+If the search reports an unsupported location, use a location accepted by SerpApi's location database. For example, the default Hillsboro location is `Hillsboro,Oregon,United States`.
 
 ## Profile and search behavior
 
